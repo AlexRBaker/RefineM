@@ -54,16 +54,15 @@ class Tetranucleotide(object):
         """Canonical order of tetranucleotides."""
         return self.signatures.canonical_order()
 
+
     def _producer(self, seq_info):
         """Calculate tetranucleotide signature of a sequence.
-
         Parameters
         ----------
         seq_id : str
             Unique id of sequence.
         seq : str
             Sequence in nuceltoide space.
-
         Returns
         -------
         str
@@ -73,35 +72,17 @@ class Tetranucleotide(object):
         """
 
         seq_id, seq = seq_info
-        print seq_info
-        #seq_id, seq=singlegenome.run(seq_info,window_size,window_gap,links_file)
-        #seq_id, seq=singlegenome.windows(seq_info,0.1,0.05)
-        #self.Windows[seq_info[0]]=seq_id  #For a scaffold
-        
-        window_signature=()
-        for i in xrange(0,len(seq)):
-            sig = self.signatures.seq_signature(seq)
 
-            total_kmers = sum(sig)
-            for i in xrange(0, len(sig)):
-                sig[i] = float(sig[i]) / total_kmers
-            window_signature.append((seq_id[i],sig))
-            
-        return tuple(window_signature) #List of tuple signals for each window
-            
-            #~ 
-            #~ 
-        #~ sig = self.signatures.seq_signature(seq)
-#~ 
-        #~ total_kmers = sum(sig)
-        #~ for i in xrange(0, len(sig)):
-            #~ sig[i] = float(sig[i]) / total_kmers
-#~ 
-        #~ return (seq_id, sig)
+        sig = self.signatures.seq_signature(seq)
+
+        total_kmers = sum(sig)
+        for i in xrange(0, len(sig)):
+            sig[i] = float(sig[i]) / total_kmers
+
+        return (seq_id, sig)
 
     def _consumer(self, produced_data, consumer_data):
         """Consume results from producer processes.
-
          Parameters
         ----------
         produced_data : list -> kmers in the canonical order
@@ -109,7 +90,6 @@ class Tetranucleotide(object):
         consumer_data : d[seq_id] -> tetranucleotide signature
             Set of kmers observed across all genomes (kmer_set),
             along with the kmer usage of each genome (genome_kmer_usage).
-
         Returns
         -------
         consumer_data: dict
@@ -118,10 +98,9 @@ class Tetranucleotide(object):
 
         if consumer_data == None:
             consumer_data = {}
-        for seq_id,sig in produced_data:
-            consumer_data[seq_id] = sig #Now make a bigger dictionary
-        #~ seq_id, sig = produced_data
-        #~ consumer_data[seq_id] = sig
+
+        seq_id, sig = produced_data
+        consumer_data[seq_id] = sig
 
         return consumer_data
 

@@ -79,6 +79,7 @@ class BasePlot(AbstractPlot):
 
         links = []
         link_colors = []
+        
         for id1, c1, id2, c2 in link_scaffold_ids:
             stats1 = scaffold_stats.get(id1, None)
             stats2 = scaffold_stats.get(id2, None)

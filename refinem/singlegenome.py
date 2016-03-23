@@ -53,7 +53,7 @@ class WindowGen(object):
         
         
         filename=os.path.split(scaffold_file)[1]
-        start="".join(filename.split('.')[:-1])
+        start=".".join(filename.split('.')[:-1])
         end=filename.split('.')[-1]
         window_file=os.path.join(output_dir,start+"windows."+end)    
         
@@ -187,12 +187,13 @@ class WindowGen(object):
                 otherwise raises an error
         '''
         complete=False
+        colours="[0.7,0.7,0.7]"
         try:
             index=range(0,len(Windows))
             with self.tryopen(links_file) as linksfile:
                 for scaffold,windows in Windows.iteritems():
                     for i in range(0, len(windows)-1):
-                        linksfile.write("{0}\t{1}\n".format(windows[i],windows[i+1]))
+                        linksfile.write("{0}\t{1}\t{2}\t{3}\n".format(windows[i],colours,windows[i+1],colours))
                 complete=True
             return complete
         except:

@@ -18,6 +18,7 @@
 import os
 import sys
 import logging
+import ast #for safe eval function
 from collections import defaultdict
 
 from refinem.scaffold_stats import ScaffoldStats
@@ -286,8 +287,15 @@ class OptionsParser():
 
         link_scaffold_ids = []
         if options.links_file:
-            link_scaffold_ids.append(line.strip().split('\t') for line in open(options.links_file))
-
+            with open(options.links_file) as links_file:
+                for line in links_file:
+                    print line.strip().split('\t')
+                
+                link_scaffold_ids.append([ast.literal_eval(item) if i not in (0,2) else item for i,item in enumerate((line.strip().split('\t')))])
+            #link_scaffold_ids.append(line.strip().split('\t') for line in open(options.links_file))
+            
+        #print list(link_scaffold_ids[0])
+        
         # create plots
         genomes_processed = 0
         plot_dir = os.path.join(options.output_dir, 'plots')
@@ -307,13 +315,13 @@ class OptionsParser():
                 genome_scaffold_stats[scaffold_id] = scaffold_stats.stats[scaffold_id]
 
             if options.individual_plots:
-                # GC plot
-                gc_plots = GcPlots(options)
-                gc_plots.plot(genome_scaffold_stats, highlight_scaffolds_ids, link_scaffold_ids, gs.mean_gc, outliers.gc_dist, [options.gc_perc])
-
-                output_plot = os.path.join(plot_dir, genome_id + '.gc_plots.' + options.image_type)
-                gc_plots.save_plot(output_plot, dpi=options.dpi)
-                gc_plots.save_html(os.path.join(plot_dir, genome_id + '.gc_plots.html'))
+                #~ # GC plot
+                #~ gc_plots = GcPlots(options)
+                #~ gc_plots.plot(genome_scaffold_stats, highlight_scaffolds_ids, link_scaffold_ids, gs.mean_gc, outliers.gc_dist, [options.gc_perc])
+#~ 
+                #~ output_plot = os.path.join(plot_dir, genome_id + '.gc_plots.' + options.image_type)
+                #~ gc_plots.save_plot(output_plot, dpi=options.dpi)
+                #~ gc_plots.save_html(os.path.join(plot_dir, genome_id + '.gc_plots.html'))
 
                 # TD plot
                 td_plots = TdPlots(options)
