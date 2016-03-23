@@ -57,6 +57,12 @@ class OptionsParser():
         """Initialization"""
         self.logger = logging.getLogger()
         self.time_keeper = TimeKeeper()
+        
+    #~ def item_eval(item):
+        #~ try:
+            #~ return ast.literal_eval(item)
+        #~ except ValueError:
+            #~ return item
 
     def _genome_files(self, genome_dir, genome_ext):
         """Identify genomes files.
@@ -289,9 +295,8 @@ class OptionsParser():
         if options.links_file:
             with open(options.links_file) as links_file:
                 for line in links_file:
-                    print line.strip().split('\t')
-                
-                link_scaffold_ids.append([ast.literal_eval(item) if i not in (0,2) else item for i,item in enumerate((line.strip().split('\t')))])
+                    #print line.strip().split('\t')
+                    link_scaffold_ids.append([ast.literal_eval(item) if i not in (0,2) else item for i,item in enumerate((line.strip().split('\t')))])
             #link_scaffold_ids.append(line.strip().split('\t') for line in open(options.links_file))
             
         #print list(link_scaffold_ids[0])

@@ -30,6 +30,7 @@ import biolib.seq_io as seq_io
 class WindowGen(object):
     def __init__(self,cpus):
         self.cpus=cpus
+        #~ self.colormap=True
         
     def write_windows(self,scaffold_file,output_dir,window_size,window_gap):
         '''
@@ -186,11 +187,20 @@ class WindowGen(object):
                 True if successfully wrote the file
                 otherwise raises an error
         '''
+        import matplotlib.pyplot as plt
         complete=False
+        #~ if self.colormap:
+            #~ N_scaffolds=len(Windows) 
+            #~ start=0
+            #~ stop=1
+            #~ colormap_steps=np.linspace(start,stop,N_scaffolds)
+            #~ colours=[str(plt.cm.cubehelix(i)[0:3]) for i in colormap_steps] #using cubehelix - desaturated color map
+        #~ else:
+            #~ colours="[0.7,0.7,0.7]"
         colours="[0.7,0.7,0.7]"
         try:
             index=range(0,len(Windows))
-            with self.tryopen(links_file) as linksfile:
+            with self.tryopen(links_file) as linksfile:    
                 for scaffold,windows in Windows.iteritems():
                     for i in range(0, len(windows)-1):
                         linksfile.write("{0}\t{1}\t{2}\t{3}\n".format(windows[i],colours,windows[i+1],colours))
@@ -198,6 +208,20 @@ class WindowGen(object):
             return complete
         except:
             raise
+        #~ try:
+            #~ j=0
+            #~ with self.tryopen(links_file) as linksfile:
+                #~ for scaffold,windows in Windows.iteritems():
+                    #~ for i in range(0, len(windows)-1):
+                        #~ if self.colormap:
+                            #~ linksfile.write("{0}\t{1}\t{2}\t{3}\n".format(windows[i],list(colours[j]),windows[i+1],list(colours[j])))
+                        #~ else:
+                            #~ linksfile.write("{0}\t{1}\t{2}\t{3}\n".format(windows[i],colours,windows[i+1],colours))
+                    #~ j+=1
+                #~ complete=True
+            #~ return complete
+        #~ except:
+            #~ raise
 
     def tryopen(self, filename):
         '''
