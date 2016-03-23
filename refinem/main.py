@@ -38,6 +38,7 @@ from refinem.plots.distribution_plots import DistributionPlots
 from refinem.plots.gc_cov_plot import GcCovPlot
 from refinem.plots.tetra_pca_plot import TetraPcaPlot
 from refinem.plots.combined_plots import CombinedPlots
+from refinem.singlegenome import WindowGen
 
 import biolib.seq_io as seq_io
 import biolib.genome_tk as genome_tk
@@ -137,6 +138,7 @@ class OptionsParser():
 
     def scaffold_stats(self, options):
         """Scaffold statistics command"""
+        print options
         self.logger.info('')
         self.logger.info('*******************************************************************************')
         self.logger.info(' [RefineM - scaffold_stats] Calculating statistics for scaffolds.')
@@ -169,7 +171,7 @@ class OptionsParser():
         else:
             coverage_file = options.coverage_file
 
-        # get tetranucleotide signatures
+        # get tetranucleotide signatures - ALEX - IMPORTANT FOR MY STUFF 
         if not options.tetra_file:
             self.logger.info('')
             tetra = Tetranucleotide(options.cpus)
@@ -321,62 +323,62 @@ class OptionsParser():
                 td_plots.save_plot(output_plot, dpi=options.dpi)
                 td_plots.save_html(os.path.join(plot_dir, genome_id + '.td_plots.html'))
 
-                # mean absolute deviation of coverage profiles
-                cov_perc_plots = CovPercPlots(options)
-                cov_perc_plots.plot(genome_scaffold_stats, highlight_scaffolds_ids, link_scaffold_ids, gs.mean_coverage, [options.cov_perc])
+                #~ # mean absolute deviation of coverage profiles
+                #~ cov_perc_plots = CovPercPlots(options)
+                #~ cov_perc_plots.plot(genome_scaffold_stats, highlight_scaffolds_ids, link_scaffold_ids, gs.mean_coverage, [options.cov_perc])
+#~ 
+                #~ output_plot = os.path.join(plot_dir, genome_id + '.cov_perc.' + options.image_type)
+                #~ cov_perc_plots.save_plot(output_plot, dpi=options.dpi)
+                #~ cov_perc_plots.save_html(os.path.join(plot_dir, genome_id + '.cov_perc.html'))
+#~ 
+                #~ # coverage correlation plots
+                #~ if len(gs.mean_coverage) > 1:
+                    #~ cov_corr_plots = CovCorrPlots(options)
+                    #~ cov_corr_plots.plot(genome_scaffold_stats, highlight_scaffolds_ids, gs.mean_coverage, [options.cov_corr])
+#~ 
+                    #~ output_plot = os.path.join(plot_dir, genome_id + '.cov_corr.' + options.image_type)
+                    #~ cov_corr_plots.save_plot(output_plot, dpi=options.dpi)
+                    #~ cov_corr_plots.save_html(os.path.join(plot_dir, genome_id + '.cov_corr.html'))
 
-                output_plot = os.path.join(plot_dir, genome_id + '.cov_perc.' + options.image_type)
-                cov_perc_plots.save_plot(output_plot, dpi=options.dpi)
-                cov_perc_plots.save_html(os.path.join(plot_dir, genome_id + '.cov_perc.html'))
-
-                # coverage correlation plots
-                if len(gs.mean_coverage) > 1:
-                    cov_corr_plots = CovCorrPlots(options)
-                    cov_corr_plots.plot(genome_scaffold_stats, highlight_scaffolds_ids, gs.mean_coverage, [options.cov_corr])
-
-                    output_plot = os.path.join(plot_dir, genome_id + '.cov_corr.' + options.image_type)
-                    cov_corr_plots.save_plot(output_plot, dpi=options.dpi)
-                    cov_corr_plots.save_html(os.path.join(plot_dir, genome_id + '.cov_corr.html'))
-
-            # combined distribution, GC vs. coverage, and tetranucleotide signature plots
-            combined_plots = CombinedPlots(options)
-            combined_plots.plot(genome_scaffold_stats,
-                            highlight_scaffolds_ids, link_scaffold_ids, gs,
-                            outliers.gc_dist, outliers.td_dist,
-                            options.gc_perc, options.td_perc, options.cov_perc)
-
-            output_plot = os.path.join(plot_dir, genome_id + '.combined.' + options.image_type)
-            combined_plots.save_plot(output_plot, dpi=options.dpi)
-            combined_plots.save_html(os.path.join(plot_dir, genome_id + '.combined.html'))
-
-            genome_plots[genome_id].append(('Combined', genome_id + '.combined.html'))
-
-            # combined plot of distributions
-            dist_plots = DistributionPlots(options)
-            dist_plots.plot(genome_scaffold_stats,
-                            highlight_scaffolds_ids,
-                            link_scaffold_ids,
-                            gs,
-                            outliers.gc_dist, outliers.td_dist,
-                            options.gc_perc, options.td_perc, options.cov_perc)
-
-            output_plot = os.path.join(plot_dir, genome_id + '.dist_plot.' + options.image_type)
-            dist_plots.save_plot(output_plot, dpi=options.dpi)
-            dist_plots.save_html(os.path.join(plot_dir, genome_id + '.dist_plot.html'))
-
-            genome_plots[genome_id].append(('Distributions', genome_id + '.dist_plot.html'))
-
-            # GC vs. coverage plot
-            gc_cov_plot = GcCovPlot(options)
-            gc_cov_plot.plot(genome_scaffold_stats,
-                             highlight_scaffolds_ids, link_scaffold_ids,
-                             gs.mean_gc, gs.mean_coverage)
-
-            output_plot = os.path.join(plot_dir, genome_id + '.gc_coverge.' + options.image_type)
-            gc_cov_plot.save_plot(output_plot, dpi=options.dpi)
-            gc_cov_plot.save_html(os.path.join(plot_dir, genome_id + '.gc_coverge.html'))
-
-            genome_plots[genome_id].append(('GC vs. coverage', genome_id + '.gc_coverge.html'))
+            #~ # combined distribution, GC vs. coverage, and tetranucleotide signature plots
+            #~ combined_plots = CombinedPlots(options)
+            #~ combined_plots.plot(genome_scaffold_stats,
+                            #~ highlight_scaffolds_ids, link_scaffold_ids, gs,
+                            #~ outliers.gc_dist, outliers.td_dist,
+                            #~ options.gc_perc, options.td_perc, options.cov_perc)
+#~ 
+            #~ output_plot = os.path.join(plot_dir, genome_id + '.combined.' + options.image_type)
+            #~ combined_plots.save_plot(output_plot, dpi=options.dpi)
+            #~ combined_plots.save_html(os.path.join(plot_dir, genome_id + '.combined.html'))
+#~ 
+            #~ genome_plots[genome_id].append(('Combined', genome_id + '.combined.html'))
+#~ 
+            #~ # combined plot of distributions
+            #~ dist_plots = DistributionPlots(options)
+            #~ dist_plots.plot(genome_scaffold_stats,
+                            #~ highlight_scaffolds_ids,
+                            #~ link_scaffold_ids,
+                            #~ gs,
+                            #~ outliers.gc_dist, outliers.td_dist,
+                            #~ options.gc_perc, options.td_perc, options.cov_perc)
+#~ 
+            #~ output_plot = os.path.join(plot_dir, genome_id + '.dist_plot.' + options.image_type)
+            #~ dist_plots.save_plot(output_plot, dpi=options.dpi)
+            #~ dist_plots.save_html(os.path.join(plot_dir, genome_id + '.dist_plot.html'))
+#~ 
+            #~ genome_plots[genome_id].append(('Distributions', genome_id + '.dist_plot.html'))
+#~ 
+            #~ # GC vs. coverage plot
+            #~ gc_cov_plot = GcCovPlot(options)
+            #~ gc_cov_plot.plot(genome_scaffold_stats,
+                             #~ highlight_scaffolds_ids, link_scaffold_ids,
+                             #~ gs.mean_gc, gs.mean_coverage)
+#~ 
+            #~ output_plot = os.path.join(plot_dir, genome_id + '.gc_coverge.' + options.image_type)
+            #~ gc_cov_plot.save_plot(output_plot, dpi=options.dpi)
+            #~ gc_cov_plot.save_html(os.path.join(plot_dir, genome_id + '.gc_coverge.html'))
+#~ 
+            #~ genome_plots[genome_id].append(('GC vs. coverage', genome_id + '.gc_coverge.html'))
 
             # tetranucleotide signature PCA plot
             tetra = TetraPcaPlot(options)
@@ -671,6 +673,45 @@ class OptionsParser():
         self.logger.info('  Unbinned scaffolds written to: ' + options.output_file)
 
         self.time_keeper.print_time_stamp()
+        
+        
+    def tetra_compare(self, options):
+        """Tetranucleotide comparison command"""
+        self.logger.info('')
+        self.logger.info('*******************************************************************************')
+        self.logger.info(' [RefineM - tetra_compare] compare tetranucleotide frequencies')
+        self.logger.info('*******************************************************************************')
+        
+        check_file_exists(options.scaffold_file)
+
+        if not self._check_nuclotide_seqs([options.scaffold_file]):
+            self.logger.warning('[Warning] Scaffold file must contain nucleotide sequences.')
+            sys.exit()
+
+        genome_files = self._genome_files(options.genome_nt_dir, options.genome_ext)
+        
+        if not self._check_nuclotide_seqs(genome_files):
+            self.logger.warning('[Warning] All files must contain nucleotide sequences.')
+            sys.exit()
+
+        make_sure_path_exists(options.output_dir)
+        
+        windows=WindowGen(options.cpus)
+        windows_file, links_file=windows.write_windows(options.scaffold_file,options.output_dir,options.window_size,options.gap_size)
+        
+        options.scaffold_file=windows_file
+        print options.scaffold_file
+        options.genome_nt_dir=windows_file
+        options.links_file=links_file
+        print options.links_file
+        
+        self.scaffold_stats(options)
+        
+        options.scaffold_stats_file=os.path.join(options.output_dir, 'scaffold_stats.tsv')
+        print options.scaffold_stats_file
+        
+        self.outliers(options)
+        
 
     def parse_options(self, options):
         """Parse user options and call the correct pipeline(s)"""
@@ -680,6 +721,7 @@ class OptionsParser():
         check_dependencies(('diamond', 'ktImportText'))
 
         if(options.subparser_name == 'scaffold_stats'):
+            print options
             self.scaffold_stats(options)
         elif(options.subparser_name == 'genome_stats'):
             self.genome_stats(options)
@@ -703,6 +745,8 @@ class OptionsParser():
             self.call_genes(options)
         elif(options.subparser_name == 'unbinned'):
             self.unbinned(options)
+        elif (options.subparser_name == 'tetra_compare'):
+            self.tetra_compare(options)
         else:
             self.logger.error('  [Error] Unknown RefineM command: ' + options.subparser_name + '\n')
             sys.exit()

@@ -32,7 +32,6 @@ import numpy as np
 
 from refinem.errors import ParsingError
 
-
 class Tetranucleotide(object):
     """Calculate tetranucleotide signature of sequences."""
 
@@ -49,6 +48,7 @@ class Tetranucleotide(object):
         self.cpus = cpus
 
         self.signatures = GenomicSignature(4)
+        
 
     def canonical_order(self):
         """Canonical order of tetranucleotides."""
@@ -73,14 +73,31 @@ class Tetranucleotide(object):
         """
 
         seq_id, seq = seq_info
+        print seq_info
+        #seq_id, seq=singlegenome.run(seq_info,window_size,window_gap,links_file)
+        #seq_id, seq=singlegenome.windows(seq_info,0.1,0.05)
+        #self.Windows[seq_info[0]]=seq_id  #For a scaffold
+        
+        window_signature=()
+        for i in xrange(0,len(seq)):
+            sig = self.signatures.seq_signature(seq)
 
-        sig = self.signatures.seq_signature(seq)
-
-        total_kmers = sum(sig)
-        for i in xrange(0, len(sig)):
-            sig[i] = float(sig[i]) / total_kmers
-
-        return (seq_id, sig)
+            total_kmers = sum(sig)
+            for i in xrange(0, len(sig)):
+                sig[i] = float(sig[i]) / total_kmers
+            window_signature.append((seq_id[i],sig))
+            
+        return tuple(window_signature) #List of tuple signals for each window
+            
+            #~ 
+            #~ 
+        #~ sig = self.signatures.seq_signature(seq)
+#~ 
+        #~ total_kmers = sum(sig)
+        #~ for i in xrange(0, len(sig)):
+            #~ sig[i] = float(sig[i]) / total_kmers
+#~ 
+        #~ return (seq_id, sig)
 
     def _consumer(self, produced_data, consumer_data):
         """Consume results from producer processes.
@@ -101,9 +118,10 @@ class Tetranucleotide(object):
 
         if consumer_data == None:
             consumer_data = {}
-
-        seq_id, sig = produced_data
-        consumer_data[seq_id] = sig
+        for seq_id,sig in produced_data:
+            consumer_data[seq_id] = sig #Now make a bigger dictionary
+        #~ seq_id, sig = produced_data
+        #~ consumer_data[seq_id] = sig
 
         return consumer_data
 
@@ -195,7 +213,7 @@ class Tetranucleotide(object):
         output_file : str
             Name of output file.
         """
-
+        #singlegenome.write_links(output_file)
         fout = open(output_file, 'w')
 
         fout.write('Scaffold id')

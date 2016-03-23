@@ -99,6 +99,20 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(add_help=False)
     subparsers = parser.add_subparsers(help="--", dest='subparser_name')
 
+    #Plot tetranucleotide comparison by windows
+    windows_parser=subparsers.add_parser('tetra_compare', 
+                                             formatter_class=CustomHelpFormatter,
+                                             description='subparser_name')
+    windows_parser.add_argument('scaffold_file', help="scaffolds binned to generate putative genomes")
+    windows_parser.add_argument('genome_nt_dir', help="directory containing nucleotide scaffolds for each genome")
+    windows_parser.add_argument('output_dir', help="output directory")
+    windows_parser.add_argument('window_size',help='The size of windows to make (It can be a fraction of scaffold length)')
+    windows_parser.add_argument('gap_size', help='The size of gaps between the sliding windows of the scaffold')
+    windows_parser.add_argument('-x', '--genome_ext', default='fna', help="extension of genomes (other files in directory are ignored)")
+    windows_parser.add_argument('--individual_plots', action="store_true", default=False, help='create individual plots for each statistic')
+    windows_parser.add_argument('-c', '--cpus', help='number of CPUs to use', type=int, default=16)
+    
+
     # Calculate scaffold statistics
     stats_parser = subparsers.add_parser('scaffold_stats',
                                             formatter_class=CustomHelpFormatter,
