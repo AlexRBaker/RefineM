@@ -701,7 +701,7 @@ class OptionsParser():
         
         options.scaffold_file=windows_file
         print options.scaffold_file
-        options.genome_nt_dir=windows_file
+        options.genome_nt_dir=os.path.split(windows_file)[0] #Expects one genome - the scaffolds file
         options.links_file=links_file
         print options.links_file
         

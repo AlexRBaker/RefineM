@@ -111,6 +111,26 @@ if __name__ == '__main__':
     windows_parser.add_argument('-x', '--genome_ext', default='fna', help="extension of genomes (other files in directory are ignored)")
     windows_parser.add_argument('--individual_plots', action="store_true", default=False, help='create individual plots for each statistic')
     windows_parser.add_argument('-c', '--cpus', help='number of CPUs to use', type=int, default=16)
+    #scaffold_stats flags
+    windows_parser.add_argument('--tetra_file', help="file containing tetranucleotide signatures information", default=None)
+    windows_parser.add_argument('--coverage_file', help="file containing coverage profile information", default=None)
+    windows_parser.add_argument('-rr', '--cov_all_reads', action='store_true', help="use all reads to estimate coverage instead of just proper pairs")
+    windows_parser.add_argument('-a', '--cov_min_align', help='minimum alignment length as percentage of read length', type=float, default=0.98)
+    windows_parser.add_argument('-e', '--cov_max_edit_dist', help='maximum edit distance as percentage of read length', type=float, default=0.02)
+    #Outlier flags
+    windows_parser.add_argument('--gc_perc', help='percentile for identify scaffolds with divergent GC content', type=int, choices=xrange(0, 101), default=95, metavar='int')
+    windows_parser.add_argument('--td_perc', help='percentile for identify scaffolds with divergent tetranucleotide signatures', type=int, choices=xrange(0, 101), default=95, metavar='int')
+    windows_parser.add_argument('--cov_corr', help='correlation for identifying scaffolds with divergent coverage profiles', type=float, default=0.8)
+    windows_parser.add_argument('--cov_perc', help='mean absolute percent error for identifying scaffolds with divergent coverage profiles', type=int, choices=xrange(0, 1001), default=50, metavar='int')
+    windows_parser.add_argument('-r', '--report_type', help="report sequences that are outliers in 'all' or 'any' reference distribution", choices=['any', 'all'], default='any')
+    windows_parser.add_argument('--image_type', default='png', choices=['eps', 'pdf', 'png', 'ps', 'svg'], help='desired image type')
+    windows_parser.add_argument('--point_size', type=int, default=36, help='desired size of points in scatterplot')
+    windows_parser.add_argument('--highlight_file', help='file indicating scaffolds to highlight')
+    windows_parser.add_argument('--links_file', help='file indicating pairs of scaffolds to join by a line')
+    windows_parser.add_argument('--dpi', type=int, default=600, help='desired DPI of output image')
+    windows_parser.add_argument('--font_size', type=int, default=12, help='desired font size')
+    windows_parser.add_argument('--width', type=float, default=10, help='width of output image')
+    windows_parser.add_argument('--height', type=float, default=8, help='height of output image')
     
 
     # Calculate scaffold statistics
